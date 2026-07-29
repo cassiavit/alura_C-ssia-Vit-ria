@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Senhas</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            align-items: center;
+            background-color: #0b111e;
+            display: flex;
+            height: 100vh;
+            justify-content: center;
+        }
+
+        .container {
+            background-color: #071126;
+            border-radius: 4px;
+            color: #ffffff;
+            max-width: 650px;
+            padding: 40px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .header {
+            margin-bottom: 35px;
+        }
+
+        .header img, .header .lock-icon {
+            color: #0066ff;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #a0aec0;
+            font-size: 14px;
+        }
+
+        .output-box {
+            align-items: center;
+            border-bottom: 2px solid #1a365d;
+            display: flex;
+            margin-bottom: 30px;
+            padding: 15px 0;
+        }
+
+        .output-box span {
+            color: #a0aec0;
+            font-size: 13px;
+            margin-right: 25px;
+        }
+
+        .output-box input {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 24px;
+            font-family: monospace;
+            letter-spacing: 1px;
+            outline: none;
+            width: 100%;
+        }
+
+        .setup-box {
+            border: 1px solid #1a2e56;
+            border-radius: 4px;
+            padding: 25px;
+            text-align: left;
+        }
+
+        .setup-box h2 {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 25px;
+        }
+
+        .config-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .column-title {
+            color: #a0aec0;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .counter-container {
+            align-items: center;
+            border: 1px solid #2d3748;
+            border-radius: 3px;
+            display: flex;
+            width: fit-content;
+        }
+
+        .counter-btn {
+            background: none;
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 8px 14px;
+        }
+
+        .counter-value {
+            border-left: 1px solid #2d3748;
+            border-right: 1px solid #2d3748;
+            font-size: 14px;
+            padding: 8px 14px;
+            min-width: 45px;
+            text-align: center;
+        }
+
+        .checkbox-label {
+            align-items: center;
+            cursor: pointer;
+            display: flex;
+            font-size: 13px;
+            margin-bottom: 10px;
+            user-select: none;
+        }
+
+        .checkbox-label input {
+            margin-right: 10px;
+        }
+
+        .strength-container {
+            width: 130px;
+        }
+
+        .strength-bar {
+            background-color: #1a253c;
+            border-radius: 3px;
+            height: 18px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .strength-fill {
+            height: 100%;
+            transition: width 0.3s ease, background-color 0.3s ease;
+            width: 33.33%;
+        }
+
+        .strength-labels {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .strength-labels span {
+            color: #a0aec0;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <div class="lock-icon">🔒</div>
+            <h1>Gerador de senhas</h1>
+            <p>Gere instantaneamente uma senha aleatória e segura</p>
+        </div>
+
+        <div class="output-box">
+            <span>Senha</span>
+            <input type="text" id="passwordOutput" readonly>
+        </div>
+
+        <div class="setup-box">
+            <h2>Personalize sua senha</h2>
+            
+            <div class="config-container">
+                <div class="column">
+                    <span class="column-title">Número de caracteres</span>
+                    <div class="counter-container">
+                        <button class="counter-btn" id="decreaseBtn">-</button>
+                        <span class="counter-value" id="lengthValue">12</span>
+                        <button class="counter-btn" id="increaseBtn">+</button>
+                    </div>
+                </div>
+
+                <div class="column">
+                    <span class="column-title">Características da senha</span>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="chkUpper" checked> Letras maiúsculas
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="chkLower" checked> Letras minusculas
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="chkNumbers"> Números
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="chkSymbols"> Símbolos
+                    </label>
+                </div>
+
+                <div class="column strength-container">
+                    <span class="column-title">Força da senha</span>
+                    <div class="strength-bar">
+                        <div class="strength-fill" id="strengthFill"></div>
+                    </div>
+                    <div class="strength-labels">
+                        <span>Fraca</span>
+                        <span>Média</span>
+                        <span>Forte</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const passwordOutput = document.getElementById('passwordOutput');
+        const lengthValue = document.getElementById('lengthValue');
+        const decreaseBtn = document.getElementById('decreaseBtn');
+        const increaseBtn = document.getElementById('increaseBtn');
+        
+        const chkUpper = document.getElementById('chkUpper');
+        const chkLower = document.getElementById('chkLower');
+        const chkNumbers = document.getElementById('chkNumbers');
+        const chkSymbols = document.getElementById('chkSymbols');
+        
+        const strengthFill = document.getElementById('strengthFill');
+
+        let passwordLength = 12;
+
+        const chars = {
+            upper: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+            lower: 'abcdefghijklmnopqrstuvwxyz',
+            numbers: '0123456789',
+            symbols: '!@#$%^&*()_+~`|}{[]:;?><,./-='
+        };
+
+        function generatePassword() {
+            let pool = '';
+            let activeTypes = 0;
+
+            if (chkUpper.checked) { pool += chars.upper; activeTypes++; }
+            if (chkLower.checked) { pool += chars.lower; activeTypes++; }
+            if (chkNumbers.checked) { pool += chars.numbers; activeTypes++; }
+            if (chkSymbols.checked) { pool += chars.symbols; activeTypes++; }
+
+            if (pool === '') {
+                passwordOutput.value = '';
+                updateStrength(0);
+                return;
+            }
+
+            let password = '';
+            for (let i = 0; i < passwordLength; i++) {
+                const randomIndex = Math.floor(Math.random() * pool.length);
+                password += pool[randomIndex];
+            }
+
+            passwordOutput.value = password;
+            updateStrength(activeTypes);
+        }
+
+        function updateStrength(activeTypes) {
+            if (activeTypes <= 2) {
+                strengthFill.style.width = '33.33%';
+                strengthFill.style.backgroundColor = '#ff3b30'; // Vermelho
+            } else if (activeTypes === 3) {
+                strengthFill.style.width = '66.66%';
+                strengthFill.style.backgroundColor = '#ffcc00'; // Amarelo
+            } else if (activeTypes === 4) {
+                strengthFill.style.width = '100%';
+                strengthFill.style.backgroundColor = '#34c759'; // Verde
+            }
+        }
+
+        decreaseBtn.addEventListener('click', () => {
+            if (passwordLength > 4) {
+                passwordLength--;
+                lengthValue.textContent = passwordLength;
+                generatePassword();
+            }
+        });
+
+        increaseBtn.addEventListener('click', () => {
+            if (passwordLength < 32) {
+                passwordLength++;
+                lengthValue.textContent = passwordLength;
+                generatePassword();
+            }
+        });
+
+        [chkUpper, chkLower, chkNumbers, chkSymbols].forEach(checkbox => {
+            checkbox.addEventListener('change', generatePassword);
+        });
+
+        // Inicializa o gerador ao carregar a página
+        generatePassword();
+    </script>
+</body>
+</html>
